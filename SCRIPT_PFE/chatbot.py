@@ -53,7 +53,8 @@ def query_to_yaml(descriptions):
 
     # Création des messages du chat
     chat_prompt = ChatPromptTemplate.from_messages([
-        ("system", "Vous êtes une intelligence artificielle spécialisée dans la génération de fichiers YAML pour l'infrastructure."),
+        ("system", "Vous êtes une intelligence artificielle spécialisée dans la génération de fichiers YAML pour l'infrastructure. d'apres le prompt"+
+         " donné tu dois faire le fichier playbook.yaml"),
         ("human", "Créez un ou plusieurs codes YAML au style Terraform pour configurer un réseau d'infrastructure incluant:\n{descriptions}")
     ])
 
