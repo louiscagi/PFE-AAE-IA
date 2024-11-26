@@ -128,4 +128,4 @@ Développer des compétences pratiques en déploiement d’infrastructures rése
 - Ajoutez un serveur Web avec Nginx et un certificat SSL.  
 - Configurez un VPN pour permettre des connexions distantes sécurisées au réseau.  
 
-Ce sujet vous permettra de couvrir toutes les compétences listées de manière progressive et complète. 😊
+
