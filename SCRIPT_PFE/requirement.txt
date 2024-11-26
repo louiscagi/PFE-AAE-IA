@@ -1,0 +1,8 @@
+streamlit==1.26.0      # Interface utilisateur
+openai==0.28.0         # Interaction avec l'API OpenAI
+langchain==0.0.319     # Pour la gestion avancée des prompts et modèles
+langchain_community==0.3.8  # Fonctionnalités supplémentaires pour LangChain
+PyYAML==6.0.2          # Lecture/écriture des fichiers YAML
+SQLAlchemy==2.0.35     # Base de données (nécessaire pour certaines parties de LangChain)
+anyio==3.7.1           # Gestion des E/S asynchrones
+requests==2.31.0       # Requêtes HTTP (dépendance pour OpenAI)
