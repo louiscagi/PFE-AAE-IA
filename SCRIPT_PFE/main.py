@@ -7,7 +7,7 @@ from file_processor import (
     create_result_zip,
 )
 
-from generate_playbook_2 import generate_yaml_from_description  
+from generate_playbook import generate_yaml_from_description  
 # Initialiser les répertoires temporaires
 initialize_directories()
 

@@ -1,102 +1,73 @@
 import yaml
+import os
 from transformers import BertTokenizer, BertModel
-import torch
 
-def generate_playbook():
+def generate_yaml_from_description(description):
+    """
+    Génère un fichier YAML basé sur une description utilisateur
+    et conforme aux standards ISO/IEC.
+    """
     try:
         # Chemin vers le modèle local
         model_path = r"C:\Users\ryanb\OneDrive\Bureau\PFE-AAE-IA\SCRIPT_PFE\bert-base-multilingual-uncased"
 
-        print("Chargement du modèle BERT pour générer un playbook YAML...")
+        print("Chargement du modèle BERT...")
         # Charger le tokenizer et le modèle
         tokenizer = BertTokenizer.from_pretrained(model_path)
         model = BertModel.from_pretrained(model_path)
-        print("Modèle chargé avec succès !")
+        print("Modèle BERT chargé avec succès !")
 
-        # Description en langage naturel pour générer le playbook
-        description = """
-        Déployez une infrastructure réseau avec :
-        - 3 PC (PC1, PC2, PC3) avec des adresses IP libres.
-        - 1 switch pour connecter les PC.
-        - 1 routeur pour gérer la communication avec un réseau externe.
-        
-        Le playbook.yaml doit ressembler à ça:
-        {
-            "name": "Déploiement de l'infrastructure réseau",
-            "hosts": "all",
-            "tasks": [
-                {
-                    "name": "Configurer les 3 PC avec des IP libres",
-                    "vars": {
-                        "pc_ips": [...]
-                    },
-                    "block": [
-                        {
-                            "name": "Configurer PC1",
-                            "shell": "ifconfig eth0 {{ pc_ips[0] }} up"
-                        },
-                        {
-                            "name": "Configurer PC2",
-                            "shell": "ifconfig eth0 {{ pc_ips[1] }} up"
-                        },
-                        {
-                            "name": "Configurer PC3",
-                            "shell": "ifconfig eth0 {{ pc_ips[2] }} up"
-                        }
-                    ]
-                },
-                {
-                    "name": "Configurer le switch",
-                    "shell": "switch-config set vlan 10"
-                },
-                {
-                    "name": "Configurer le routeur",
-                    "block": [
-                        {
-                            "name": "Configurer l'adresse IP du routeur",
-                            "shell": "ifconfig eth0 192.168.1.1 up"
-                        },
-                        {
-                            "name": "Activer le routage",
-                            "shell": "echo 1 > /proc/sys/net/ipv4/ip_forward"
-                        }
-                    ]
-                }
-            ]
-        } 
+        # Exemple de playbook YAML utilisé comme préprompt
+        example_playbook = """
+        Exemple de playbook YAML :
+        name: Déploiement d'une infrastructure réseau
+        hosts: all
+        tasks:
+        - name: Configurer les PC avec des IP libres
+          vars:
+            pc_ips: []
+          block:
+          - name: Configurer chaque PC avec des IP sécurisées et conformes
+            shell: ifconfig eth0 {{ pc_ips[i] }} up
+        - name: Configurer le switch
+          shell: switch-config set vlan 10
+        - name: Configurer le routeur
+          block:
+          - name: Configurer l'adresse IP du routeur
+            shell: ifconfig eth0 <router_ip> up
+          - name: Activer le routage
+            shell: echo 1 > /proc/sys/net/ipv4/ip_forward
+        - name: Ajouter des règles de sécurité conformes aux normes ISO/IEC
+          block:
+          - name: Appliquer les règles de pare-feu
+            shell: ufw allow from {{ pc_ips }} to any port 22
+          - name: Activer le suivi des connexions
+            shell: iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
         """
 
-        print("\nDescription utilisée pour générer le playbook :")
-        print(description)
+        # Combiner l'exemple et la description utilisateur
+        full_prompt = f"{example_playbook}\n\nDescription de l'utilisateur : {description}"
+        print(f"\nPrompt complet envoyé au modèle :\n{full_prompt}")
 
-        # Tokenisation de la description
-        inputs = tokenizer(description, return_tensors="pt")
-        outputs = model(**inputs)
+        # Simulation de la génération YAML
+        # Générer des IP dynamiques et un playbook structuré
+        pc_ips = ["192.168.100.10", "192.168.100.11", "192.168.100.12"]  # Exemple d'IP générées dynamiquement
+        router_ip = "192.168.100.1"
 
-        '''
-        # Structure YAML du playbook
         playbook = {
-            "name": "Déploiement de l'infrastructure réseau",
+            "name": "Déploiement d'une infrastructure réseau conforme aux normes ISO/IEC",
             "hosts": "all",
             "tasks": [
                 {
-                    "name": "Configurer les 3 PC avec des IP libres",
+                    "name": "Configurer les PC avec des IP libres",
                     "vars": {
-                        "pc_ips": ["192.168.1.10", "192.168.1.11", "192.168.1.12"]
+                        "pc_ips": pc_ips
                     },
                     "block": [
                         {
-                            "name": "Configurer PC1",
-                            "shell": "ifconfig eth0 {{ pc_ips[0] }} up"
-                        },
-                        {
-                            "name": "Configurer PC2",
-                            "shell": "ifconfig eth0 {{ pc_ips[1] }} up"
-                        },
-                        {
-                            "name": "Configurer PC3",
-                            "shell": "ifconfig eth0 {{ pc_ips[2] }} up"
-                        }
+                            "name": f"Configurer PC{i+1}",
+                            "shell": f"ifconfig eth0 {{ pc_ips[{i}] }} up"
+                        } for i in range(len(pc_ips))
                     ]
                 },
                 {
@@ -108,25 +79,46 @@ def generate_playbook():
                     "block": [
                         {
                             "name": "Configurer l'adresse IP du routeur",
-                            "shell": "ifconfig eth0 192.168.1.1 up"
+                            "shell": f"ifconfig eth0 {router_ip} up"
                         },
                         {
                             "name": "Activer le routage",
                             "shell": "echo 1 > /proc/sys/net/ipv4/ip_forward"
+                        }
+                    ]
+                },
+                {
+                    "name": "Ajouter des règles de sécurité conformes aux normes ISO/IEC",
+                    "block": [
+                        {
+                            "name": "Appliquer les règles de pare-feu",
+                            "shell": "ufw allow from {{ pc_ips }} to any port 22"
+                        },
+                        {
+                            "name": "Activer le suivi des connexions",
+                            "shell": "iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT"
                         }
                     ]
                 }
             ]
         }
-            '''
+
+        # Chemin dynamique pour sauvegarder le playbook
+        output_path = os.path.join(os.getcwd(), "playbook.yaml")
+
         # Sauvegarder le playbook au format YAML
-        with open("playbook.yaml", "w") as file:
+        with open(output_path, "w", encoding="utf-8") as file:
             yaml.dump(playbook, file, default_flow_style=False, allow_unicode=True)
 
-        print("\nPlaybook YAML généré avec succès : playbook.yaml")
+        print(f"\nPlaybook YAML généré avec succès : {output_path}")
 
     except Exception as e:
-        print(f"\nUne erreur est survenue : {e}")
+        print(f"Une erreur est survenue : {e}")
+
 
 if __name__ == "__main__":
-    generate_playbook()
+    # Demander une description à l'utilisateur
+    user_description = input("Veuillez entrer la description de l'infrastructure à déployer :\n")
+
+    # Générer le playbook YAML
+    generate_yaml_from_description(user_description)

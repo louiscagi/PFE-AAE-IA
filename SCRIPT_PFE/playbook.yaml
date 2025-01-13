@@ -1,0 +1,30 @@
+hosts: all
+name: Déploiement d'une infrastructure réseau conforme aux normes ISO/IEC
+tasks:
+- block:
+  - name: Configurer PC1
+    shell: ifconfig eth0 { pc_ips[0] } up
+  - name: Configurer PC2
+    shell: ifconfig eth0 { pc_ips[1] } up
+  - name: Configurer PC3
+    shell: ifconfig eth0 { pc_ips[2] } up
+  name: Configurer les PC avec des IP libres
+  vars:
+    pc_ips:
+    - 192.168.100.10
+    - 192.168.100.11
+    - 192.168.100.12
+- name: Configurer le switch
+  shell: switch-config set vlan 10
+- block:
+  - name: Configurer l'adresse IP du routeur
+    shell: ifconfig eth0 192.168.100.1 up
+  - name: Activer le routage
+    shell: echo 1 > /proc/sys/net/ipv4/ip_forward
+  name: Configurer le routeur
+- block:
+  - name: Appliquer les règles de pare-feu
+    shell: ufw allow from {{ pc_ips }} to any port 22
+  - name: Activer le suivi des connexions
+    shell: iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+  name: Ajouter des règles de sécurité conformes aux normes ISO/IEC
