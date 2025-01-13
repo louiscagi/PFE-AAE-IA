@@ -1,44 +1,45 @@
 import streamlit as st
-from chatbot import initialize_chat, process_chat
 from file_processor import (
     initialize_directories,
     clean_directories,
     extract_zip,
-    process_files_with_chatgpt,
+    process_files_with_bert,  
     create_result_zip,
 )
 
+from generate_playbook_2 import generate_yaml_from_description  
 # Initialiser les répertoires temporaires
 initialize_directories()
 
-# Initialiser l'historique des messages
-initialize_chat()
+# **Section Génération de playbook YAML**
+st.header("Générer un Playbook YAML avec BERT")
 
-# Historique des conversations dans la barre latérale
-st.sidebar.header("Historique des conversations")
-for message in st.session_state.messages:
-    if message["role"] == "user":
-        st.sidebar.markdown(f"**Vous** : {message['content']}")
+# Zone d'entrée pour la description utilisateur
+description = st.text_area(
+    "Entrez une description pour générer un playbook YAML conforme aux normes ISO/IEC :",
+    placeholder="Exemple : Déployez 3 PC avec des IP libres, connectez-les à un switch, et configurez un routeur sécurisé.",
+)
+
+# Bouton pour générer le playbook YAML
+if st.button("Générer le Playbook YAML"):
+    if description.strip():
+        try:
+            # Appeler la fonction pour générer le fichier YAML
+            generate_yaml_from_description(description)
+            st.success("Playbook YAML généré avec succès !")
+
+            # Permettre le téléchargement du fichier généré
+            with open("playbook.yaml", "rb") as f:
+                st.download_button(
+                    label="Télécharger le Playbook YAML",
+                    data=f,
+                    file_name="playbook.yaml",
+                    mime="application/x-yaml",
+                )
+        except Exception as e:
+            st.error(f"Une erreur est survenue : {e}")
     else:
-        st.sidebar.markdown(f"**ChatGPT** : {message['content']}")
-
-# **Section Chatbot**
-st.header("Chatbot pour Deploiement SIC")
-
-# Zone d'entrée utilisateur
-with st.form("chat_form", clear_on_submit=True):
-    user_input = st.text_input("Vous :", placeholder="Posez votre question ici...")
-    submitted = st.form_submit_button("Envoyer")
-
-# Afficher la réponse en dessous de l'entrée utilisateur
-if submitted and user_input:
-    # Ajouter l'entrée utilisateur à l'historique et obtenir une réponse
-    process_chat(user_input)
-    # Obtenir la dernière réponse de l'assistant
-    if st.session_state.messages[-1]["role"] == "assistant":
-        response = st.session_state.messages[-1]["content"]
-        st.write("**Chatbot :")
-        st.markdown(response)
+        st.warning("Veuillez entrer une description avant de générer le Playbook YAML.")
 
 # **Section Uploader ZIP**
 st.header("Uploader et traiter un fichier ZIP")
@@ -55,10 +56,9 @@ if uploaded_file is not None:
     extracted_files = extract_zip(file_path)
     st.success(f"Fichiers extraits : {extracted_files}")
 
-    # Traitement avec ChatGPT
+    # Traitement avec BERT (remplacez `process_files_with_chatgpt` si nécessaire)
     st.write("Traitement en cours...")
-    result_files = process_files_with_chatgpt(extracted_files)
-    st.success("Traitement terminé !")
+    result_files = process_files_with_chatgpt(extracted_files)  
 
     # Création du ZIP final
     result_zip = create_result_zip(result_files)

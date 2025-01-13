@@ -4,7 +4,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import ChatPromptTemplate
 
 # Initialisation de l'API OpenAI
-api_key = st.secrets["OPENAI_API_KEY"]  # Bonne pratique : utiliser Streamlit Secrets
+api_key = st.secrets["OPENAI_API_KEY"]  
 openai.api_key = api_key
 
 def initialize_chat():
@@ -53,10 +53,20 @@ def query_to_yaml(descriptions):
 
     # Création des messages du chat
     chat_prompt = ChatPromptTemplate.from_messages([
-        ("system", "Vous êtes une intelligence artificielle spécialisée dans la génération de fichiers YAML pour l'infrastructure. d'apres le prompt"+
-         " donné tu dois faire le fichier playbook.yaml"),
-        ("human", "Créez un ou plusieurs codes YAML au style Terraform pour configurer un réseau d'infrastructure incluant:\n{descriptions}")
-    ])
+    (
+        "system",
+        "Vous êtes une intelligence artificielle spécialisée dans l'automatisation d'infrastructures. "
+        "Votre tâche est de générer un fichier YAML valide et utilisable directement pour des playbooks d'automatisation. "
+        "Respectez strictement le format YAML. Ne fournissez aucun texte explicatif en dehors du contenu YAML."
+    ),
+    (
+        "human",
+        "Créez un fichier `playbook.yaml` pour répondre au besoin suivant :\n"
+        "{descriptions}\n"
+        "Le fichier YAML doit être prêt à être utilisé et contenir des commentaires pour chaque section importante si nécessaire."
+    )
+])
+
 
     # Génération du prompt à partir des messages avec la description comme paramètre
     prompt_messages = chat_prompt.format_prompt(descriptions=descriptions).to_messages()

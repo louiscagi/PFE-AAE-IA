@@ -1,2 +1,4 @@
 .gitignore
 .streamlit/
+bert-base-multilingual-uncased/
+env/
