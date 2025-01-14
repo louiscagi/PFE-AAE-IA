@@ -9,7 +9,7 @@ def generate_yaml_from_description(description):
     """
     try:
         # Chemin vers le modèle local
-        model_path = r"C:\Users\ryanb\OneDrive\Bureau\PFE-AAE-IA\SCRIPT_PFE\bert-base-multilingual-uncased"
+        model_path = r".\bert-base-multilingual-uncased"
 
         print("Chargement du modèle BERT...")
         # Charger le tokenizer et le modèle

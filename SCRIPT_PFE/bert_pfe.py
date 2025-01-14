@@ -4,7 +4,7 @@ import torch
 def test_bert():
     try:
         # Chemin du modèle (local ou distant)
-        model_path = r"C:\Users\ryanb\OneDrive\Bureau\PFE-AAE-IA\SCRIPT_PFE\bert-base-multilingual-uncased"
+        model_path = r".\bert-base-multilingual-uncased"
 
         
         print("Test : Chargement du tokenizer et du modèle BERT...")

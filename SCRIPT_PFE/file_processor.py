@@ -4,7 +4,7 @@ import shutil
 from transformers import BertTokenizer, BertModel
 
 # Chemin vers le modèle BERT local
-MODEL_PATH = r"C:\Users\ryanb\OneDrive\Bureau\PFE-AAE-IA\SCRIPT_PFE\bert-base-multilingual-uncased"
+MODEL_PATH = r".\bert-base-multilingual-uncased"
 
 
 # Répertoires temporaires
