@@ -1,8 +1,14 @@
 streamlit==1.26.0      # Interface utilisateur
 openai==0.28.0         # Interaction avec l'API OpenAI
-langchain==0.0.319     # Pour la gestion avancée des prompts et modèles
-langchain_community==0.3.8  # Fonctionnalités supplémentaires pour LangChain
-PyYAML==6.0.2          # Lecture/écriture des fichiers YAML
-SQLAlchemy==2.0.35     # Base de données (nécessaire pour certaines parties de LangChain)
+langchain==0.0.319     # Gestion avancée des prompts et modèles
+langchain_community==0.3.8  # Extensions pour LangChain
+PyYAML==6.0.2          # Manipulation des fichiers YAML
+SQLAlchemy==2.0.35     # Gestion des bases de données
 anyio==3.7.1           # Gestion des E/S asynchrones
-requests==2.31.0       # Requêtes HTTP (dépendance pour OpenAI)
+requests==2.31.0       # Requêtes HTTP
+transformers==4.35.0   # Modèles NLP pré-entraînés
+torch==2.0.1           # Backend pour les modèles basés sur PyTorch
+zipfile36==0.1.3       # Gestion des fichiers ZIP
+ansible==8.0.0         # Pour valider les playbooks générés
+streamlit-aggrid==0.4.1  # Composants interactifs pour Streamlit
+rich==13.5.2           # Logging coloré
