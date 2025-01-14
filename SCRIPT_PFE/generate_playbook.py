@@ -11,12 +11,6 @@ def generate_yaml_from_description(description):
         # Chemin vers le modèle local
         model_path = r".\bert-base-multilingual-uncased"
 
-        print("Chargement du modèle BERT...")
-        # Charger le tokenizer et le modèle
-        tokenizer = BertTokenizer.from_pretrained(model_path)
-        model = BertModel.from_pretrained(model_path)
-        print("Modèle BERT chargé avec succès !")
-
         # Exemple de playbook YAML utilisé comme préprompt
         example_playbook = """
         Exemple de playbook YAML :

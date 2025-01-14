@@ -1,30 +1,40 @@
+become: true
 hosts: all
-name: Déploiement d'une infrastructure réseau conforme aux normes ISO/IEC
+name: Configuration des équipements réseau
 tasks:
-- block:
-  - name: Configurer PC1
-    shell: ifconfig eth0 { pc_ips[0] } up
-  - name: Configurer PC2
-    shell: ifconfig eth0 { pc_ips[1] } up
-  - name: Configurer PC3
-    shell: ifconfig eth0 { pc_ips[2] } up
-  name: Configurer les PC avec des IP libres
-  vars:
-    pc_ips:
-    - 192.168.100.10
-    - 192.168.100.11
-    - 192.168.100.12
-- name: Configurer le switch
-  shell: switch-config set vlan 10
-- block:
-  - name: Configurer l'adresse IP du routeur
-    shell: ifconfig eth0 192.168.100.1 up
-  - name: Activer le routage
-    shell: echo 1 > /proc/sys/net/ipv4/ip_forward
-  name: Configurer le routeur
-- block:
-  - name: Appliquer les règles de pare-feu
-    shell: ufw allow from {{ pc_ips }} to any port 22
-  - name: Activer le suivi des connexions
-    shell: iptables -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-  name: Ajouter des règles de sécurité conformes aux normes ISO/IEC
+- apt:
+    update_cache: true
+    upgrade: 'yes'
+  name: Mise à jour du système sur le routeur et les switches
+  when: ansible_facts['os_family'] == 'Debian'
+- ansible.builtin.network:
+    ipv4: '{{ item.ip_address }}'
+    name: '{{ item.interface }}'
+    netmask: '{{ item.netmask }}'
+    state: up
+  name: Configuration des adresses IP sur les interfaces des PC
+  when: inventory_hostname in ['PC1', 'PC2', 'PC3']
+  with_items:
+  - interface: eth0
+    ip_address: 192.168.1.2
+    netmask: 255.255.255.0
+- cisco.ios.ios_interface:
+    ipv4: 192.168.10.254
+    name: GigabitEthernet0/0
+    netmask: 255.255.255.0
+    state: up
+  name: Configuration de l'interface du routeur
+  when: inventory_hostname == 'routeur'
+- cisco.ios.ios_routing:
+    router_bgp:
+      asn: 65001
+      networks:
+      - 192.168.10.0/24
+  name: Activation du routage sur le routeur
+  when: inventory_hostname == 'routeur'
+- cisco.ios.ios_static_route:
+    netmask: 0.0.0.0
+    network: 0.0.0.0
+    next_hop: 192.168.10.254
+  name: Configuration du route statique sur le routeur
+  when: inventory_hostname == 'routeur'
