@@ -56,9 +56,9 @@ if uploaded_file is not None:
     extracted_files = extract_zip(file_path)
     st.success(f"Fichiers extraits : {extracted_files}")
 
-    # Traitement avec BERT (remplacez `process_files_with_chatgpt` si nécessaire)
+    # Traitement 
     st.write("Traitement en cours...")
-    result_files = process_files_with_chatgpt(extracted_files)  
+    result_files = process_files_with_bert(extracted_files)  
 
     # Création du ZIP final
     result_zip = create_result_zip(result_files)
