@@ -1,131 +1,108 @@
 # PFE-AAE-IA
 
-### Sujet d'entraînement : **Déploiement d'une Infrastructure Réseau Complète avec Automatisation**
+# README - Projet PFE24-T-409
 
-#### **Objectif pédagogique**  
-Développer des compétences pratiques en déploiement d’infrastructures réseau, incluant :  
-- La configuration matérielle (adressage IP, connexion des switchs/routeurs).  
-- L'automatisation des déploiements avec Ansible et Terraform.  
-- La création et la gestion d'une infrastructure virtuelle avec VirtualBox/VMware ou un cloud privé.  
-- La mise en place de services réseau (Active Directory, serveur de messagerie, etc.).  
-- La sécurisation et la gestion des accès utilisateurs.  
+## Introduction
 
----
+Le projet PFE24-T-409, réalisé en partenariat avec l’EAC2P et l’Armée de l’Air et de l’Espace (AAE), s’inscrit dans une démarche d’innovation en exploitant les potentialités des intelligences artificielles (IA) génératives.
 
-### **Partie 1 : Préparation de l’environnement**
-1. **Matériel et prérequis** :
-   - 10 postes physiques ou VM.
-   - Un switch manageable et un routeur basique (ou simulateur réseau comme GNS3 ou Packet Tracer).
-   - Un serveur hébergeant les scripts Ansible/Terraform.  
+Ce projet, initié suite à des travaux de stage menés par Marc-Antoine et Louis à l’EAC2P, vise à automatiser et optimiser les processus de configuration des infrastructures SIC (« Systèmes d’Information et de Communication ») pour les opérations aériennes grâce à des modèles d’IA performants et adaptés.
 
-2. **Logiciels nécessaires** :
-   - Terraform pour provisionner les VMs.  
-   - Ansible pour configurer automatiquement les services et applications.  
-   - Debian et Kali Linux comme OS pour les VMs.  
+## Objectifs du projet
 
-3. **Plan d’adressage réseau** :  
-   - **Réseau local** : 192.168.100.0/24  
-   - **Sous-réseaux** :  
-     - 192.168.100.0/28 pour les serveurs.  
-     - 192.168.100.16/28 pour les postes utilisateurs.  
-   - **IP du routeur** : 192.168.100.1  
+Le projet, planifié d’août 2024 à février 2025, poursuit les objectifs suivants :
 
----
+IA générative : Concevoir et implémenter une IA capable de produire automatiquement des scripts de configuration Ansible pour des infrastructures SIC en respectant les besoins opérationnels et les standards de sécurité.
 
-### **Partie 2 : Déploiement et configuration réseau**
-1. **Configuration manuelle initiale** :  
-   - Configurez le switch avec VLANs pour isoler le trafic.  
-     - VLAN 10 : Serveurs.  
-     - VLAN 20 : Postes utilisateurs.  
-   - Configurez le routeur pour assurer la connexion entre VLANs et le routage vers l’extérieur.  
-   - Assurez la connectivité entre tous les équipements.  
+Benchmark IA : Évaluer les performances des modèles d’IA à travers un benchmarking rigoureux basé sur des indicateurs clés (KPI).
 
-2. **Vérifications** :  
-   - Utilisez des outils comme `ping`, `traceroute`, et `nmap` pour vérifier la configuration du réseau.  
+Interface utilisateur (MVP) : Développer une interface intuitive permettant une exploitation directe des sorties IA et une interaction utilisateur simplifiée.
 
----
+## Structure du projet
 
-### **Partie 3 : Automatisation avec Terraform et Ansible**
-1. **Provisionnement des VMs avec Terraform** :
-   - Écrivez un script Terraform pour déployer :  
-     - 2 VMs Debian pour les services.  
-     - 8 VMs Kali pour les postes utilisateurs.  
+### 1. Contexte et bénéficiaires
 
-   Exemple de script Terraform pour une VM Debian :  
-   ```hcl
-   provider "virtualbox" {}
+EAC2P : Chargée du déploiement des infrastructures SIC pour les opérations aériennes, avec le support du BCSIT pour les projets techniques et innovants.
 
-   resource "virtualbox_vm" "debian" {
-     name   = "debian-server"
-     cpus   = 2
-     memory = 2048
-     network_adapter {
-       type           = "bridged"
-       host_interface = "eth0"
-     }
-     os {
-       iso_path = "path/to/debian.iso"
-     }
-   }
-   ```
+Client : L’EAC2P, représentée par le CNE Adrien et le LTN Matthieu.
 
-2. **Automatisation de la configuration avec Ansible** :
-   - **Playbook pour les serveurs** :  
-     - Installer Active Directory (`samba` pour AD sous Linux).  
-     - Configurer un serveur de messagerie (Postfix/Dovecot).  
-   - **Playbook pour les clients** :  
-     - Configurer l’accès réseau et le client de messagerie.  
-     - Ajouter les utilisateurs au domaine AD.  
+Equipe projet : Une équipe de six étudiants ingénieurs de l’ECE dirigée par Marc-Antoine Grabey.
 
----
+### 2. Périmètre technique
 
-### **Partie 4 : Mise en place des services**
-1. **Active Directory (AD)** :  
-   - Configurez un serveur Samba comme contrôleur de domaine.  
-   - Créez un domaine nommé `lab.local`.  
-   - Ajoutez des utilisateurs avec des permissions différentes.
+Le projet se concentre sur trois volets :
 
-2. **Serveur de messagerie** :  
-   - Installez et configurez Postfix pour l'envoi de mails et Dovecot pour l'accès IMAP/POP3.  
-   - Ajoutez des boîtes mails pour les utilisateurs du domaine AD.  
+IA générative : Prise en charge de multiples types d’entrées (texte, images, fichiers ZIP) pour générer des scripts conformes aux besoins opérationnels.
 
-3. **Configuration des postes utilisateurs** :  
-   - Configurez les postes Kali pour se connecter au domaine AD.  
-   - Testez les connexions avec les utilisateurs créés.  
+Benchmark IA : Fine-tuning et tests des modèles IA pour garantir qualité et conformité aux normes.
 
----
+Interface utilisateur : Création d’un outil front-end connecté à l’IA pour visualiser et interagir avec les résultats.
 
-### **Partie 5 : Tests et validation**
-1. **Tests réseau** :  
-   - Vérifiez la connectivité entre tous les éléments du réseau.  
-   - Analysez le trafic réseau avec Wireshark pour identifier d’éventuels problèmes.  
+### 3. Technologies utilisées
 
-2. **Tests des services** :  
-   - Authentifiez-vous sur le domaine avec les utilisateurs créés.  
-   - Envoyez et recevez des emails entre utilisateurs.  
+IA
 
----
+Mistral AI : Modèle français garantissant souveraineté et conformité aux besoins nationaux.
 
-### **Partie 6 : Sécurisation et optimisation**
-1. **Sécurisation des services** :  
-   - Activez TLS pour les communications du serveur de messagerie.  
-   - Configurez un pare-feu avec `ufw` ou `iptables` sur chaque VM.  
+LLaMA 2 : Modèle performant pour les tâches complexes.
 
-2. **Optimisation des performances** :  
-   - Implémentez une solution de monitoring réseau comme Nagios ou Zabbix.  
+GPT-3 : Modèle de référence pour la génération de code et la compréhension du langage naturel.
 
----
+Interface utilisateur
 
-### **Livrables attendus** :
-1. Documentation des étapes suivies.  
-2. Scripts Terraform et Ansible utilisés.  
-3. Capture d'écran des tests réalisés (connexion AD, emails envoyés/reçus).  
-4. Analyse des logs réseau et des performances.  
+Streamlit : Framework pour développer une interface web interactive et intuitive.
 
----
+Normes de sécurité
 
-### Bonus : Scénario avancé
-- Ajoutez un serveur Web avec Nginx et un certificat SSL.  
-- Configurez un VPN pour permettre des connexions distantes sécurisées au réseau.  
+ISO 27XXX : Gestion sécurisée des systèmes d’information.
 
+### 4. Fonctionnalités principales
+
+IA générative
+
+Normalisation des entrées pour garantir des résultats précis.
+
+Production de fichiers Ansible ou Terraform.
+
+Visualisation d’architectures et explications des résultats.
+
+Benchmark IA
+
+Constitution d’un dataset pour le fine-tuning.
+
+Tests sur des scénarios représentatifs (ex. : déploiement de 10 VM avec routeurs et pare-feu).
+
+Analyse basée sur des KPI tels que temps, qualité et sécurité.
+
+Interface utilisateur
+
+Prise en charge d’entrées multiples (texte, images, fichiers ZIP).
+
+Visualisation des entrées et sorties (code, fichiers, diagrammes).
+
+Historique des interactions avec l’IA.
+
+## Contraintes
+
+Souveraineté : Priorisation des modèles IA français pour garantir l’indépendance technologique.
+
+Calendrier : Remise des livrables entre octobre 2024 et février 2025.
+
+Sécurité : Respect des normes ISO 27XXX et garantie de conformité des scripts aux standards de l’ANSSI.
+
+## Livrables
+
+Modèle d’IA générative : Fonctionnel, capable de produire des configurations qualitatives et sécurisées.
+
+Module de benchmark : Évaluation rigoureuse des performances IA.
+
+Interface utilisateur : Intuitive, connectée et dotée d’un suivi des interactions.
+
+## Équipe projet
+
+Chef de projet : Marc-Antoine Grabey
+
+Membres : Louis Cagi Nicolau, Aymeric Moulet, Ryan Bagot, Adrien Beuve, Sébastien Baranger.
+
+Pour toute question ou contribution, veuillez contacter l'équipe projet via leurs canaux de communication ou consulter la documentation complète disponible dans ce dépôt.
 
