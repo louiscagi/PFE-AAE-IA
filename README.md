@@ -1,5 +1,3 @@
-# PFE-AAE-IA
-
 # README - Projet PFE24-T-409
 
 ## Introduction
@@ -110,7 +108,7 @@ Pour toute question ou contribution, veuillez contacter l'équipe projet via leu
 # Manuel D'Utilisation
 
 
-## PFE-AAE-IA: Plateforme d'Intelligence Artificielle pour le Déploiement SIC
+
 
 ## Description du Projet
 Ce projet est une application permettant de simplifier la gestion et le déploiement d’infrastructures SIC (Systèmes d'Information et de Communication) dans un contexte militaire.
