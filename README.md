@@ -225,7 +225,7 @@ L'application combine un chatbot alimenté par l'API OpenAI et des outils de tra
 ---
 
 ## Contributeurs
-- **Louis Cagi Nicolau** (Auteur Principal)
+- **Ryan Bagot** (Auteur Principal)
 - Pour toute question ou suggestion, veuillez créer une « issue » sur ce dépôt.
 
 ---
