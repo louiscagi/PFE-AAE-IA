@@ -18,6 +18,20 @@ tasks:
   - interface: eth0
     ip_address: 192.168.1.2
     netmask: 255.255.255.0
+- cisco.ios.ios_vlan:
+    name: VLAN_10
+    state: present
+    vlan_id: 10
+  name: Configuration des VLANs sur le switch
+  when: inventory_hostname == 'switch'
+- cisco.ios.ios_interface:
+    ipv4: 192.168.10.1
+    name: Vlan10
+    netmask: 255.255.255.0
+    state: up
+    vlan_id: 10
+  name: Configuration de l'interface VLAN sur le switch
+  when: inventory_hostname == 'switch'
 - cisco.ios.ios_interface:
     ipv4: 192.168.10.254
     name: GigabitEthernet0/0
@@ -38,3 +52,9 @@ tasks:
     next_hop: 192.168.10.254
   name: Configuration du route statique sur le routeur
   when: inventory_hostname == 'routeur'
+- block:
+  - name: Configurer les règles de pare-feu
+    shell: stormshield set firewall rules
+  - name: Activer la sécurité avancée
+    shell: stormshield enable advanced-security
+  name: Configurer le Stormshield
