@@ -106,3 +106,140 @@ Membres : Louis Cagi Nicolau, Aymeric Moulet, Ryan Bagot, Adrien Beuve, Sébasti
 
 Pour toute question ou contribution, veuillez contacter l'équipe projet via leurs canaux de communication ou consulter la documentation complète disponible dans ce dépôt.
 
+
+# Manuel D'Utilisation
+
+
+## PFE-AAE-IA: Plateforme d'Intelligence Artificielle pour le Déploiement SIC
+
+## Description du Projet
+Ce projet est une application permettant de simplifier la gestion et le déploiement d’infrastructures SIC (Systèmes d'Information et de Communication) dans un contexte militaire.
+
+L'application combine un chatbot alimenté par l'API OpenAI et des outils de traitement de fichiers pour automatiser des processus clés tels que :
+- Génération de fichiers YAML pour des infrastructures.
+- Analyse et traitement de fichiers ZIP via des modèles d'intelligence artificielle.
+
+## Fonctionnalités
+1. **Chatbot interactif** :
+   - Capable de répondre à des questions et de traiter des requêtes complexes.
+   - Historique des conversations accessible via une barre latérale.
+
+2. **Générateur de fichiers YAML** :
+   - Produit des fichiers YAML basés sur des descriptions en langage naturel.
+   - Prend en charge des cas d’usage avancés, tels que la configuration d'infrastructures complètes.
+
+3. **Traitement des fichiers ZIP** :
+   - Extraction de fichiers contenus dans un ZIP.
+   - Analyse des fichiers via des modèles d'intelligence artificielle (ChatGPT et Mistral AI).
+   - Génération d'un ZIP contenant les résultats du traitement.
+
+4. **Nettoyage des fichiers temporaires** :
+   - Suppression des fichiers et répertoires intermédiaires pour maintenir un espace de travail propre.
+
+---
+
+## Guide d'Installation
+
+### Prérequis
+- Python 3.8 ou version supérieure.
+- Une clé API OpenAI et/ou Mistral AI.
+- Les outils suivants doivent être installés sur votre système :
+  - pip (gestionnaire de paquets Python).
+
+### Installation
+1. Clonez le dépôt :
+   ```bash
+   git clone https://github.com/louiscagi/PFE-AAE-IA.git
+   cd PFE-AAE-IA
+   ```
+
+2. Installez les dépendances :
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+3. Configurez vos clés API :
+   - Ajoutez vos clés OpenAI et Mistral AI dans le fichier `Secrets` de Streamlit ou comme variables d'environnement :
+     ```bash
+     export OPENAI_API_KEY=your_openai_api_key
+     export MISTRAL_API_KEY=your_mistral_api_key
+     ```
+
+4. Lancez l'application :
+   ```bash
+   streamlit run main.py
+   ```
+
+---
+
+## Utilisation
+
+### 1. Chatbot
+- Une fois l'application lancée, accédez à la section **Chatbot pour Déploiement SIC**.
+- Saisissez votre question ou description dans le champ de texte et cliquez sur « Envoyer ».
+- Consultez les réponses dans la fenêtre principale et l’historique des conversations dans la barre latérale.
+
+### 2. Génération de YAML
+- Accédez à la section **Générateur YAML avec ChatGPT**.
+- Fournissez une description textuelle de l’infrastructure souhaitée.
+- Cliquez sur « Générer YAML » pour afficher le fichier YAML produit.
+- Vous pouvez copier ou télécharger ce fichier directement.
+
+### 3. Traitement des fichiers ZIP
+- Accédez à la section **Uploader et traiter un fichier ZIP**.
+- Chargez un fichier ZIP contenant les données à analyser.
+- Les fichiers extraits seront traités par les modèles d'intelligence artificielle.
+- Une fois le traitement terminé, téléchargez un ZIP contenant les résultats.
+
+### 4. Nettoyage des fichiers temporaires
+- Cliquez sur le bouton **Nettoyer les fichiers temporaires** pour libérer l’espace occupé par les répertoires temporaires.
+
+---
+
+## Structure des Fichiers
+
+### Dossiers Principaux
+- **`temp/`** : Contient les fichiers temporaires lors des traitements.
+- **`results/`** : Contient les résultats produits par les modèles d'IA.
+
+### Scripts Principaux
+- **`main.py`** : Point d'entrée de l'application.
+- **`chatbot.py`** : Implémentation du chatbot basé sur OpenAI.
+- **`draft.py`** : Gère le traitement des fichiers ZIP et leur analyse via Mistral AI.
+- **`file_processor.py`** : Outils pour manipuler et analyser des fichiers.
+- **`utils.py`** : Fonctions utilitaires pour la gestion des répertoires.
+- **`query_yaml.py`** : Génération de fichiers YAML à partir de descriptions textuelles.
+
+### Fichier de Configuration
+- **`requirements.txt`** : Liste des dépendances nécessaires.
+
+---
+
+## Dépendances
+- `streamlit` : Pour l’interface utilisateur.
+- `openai` : Interaction avec l'API OpenAI.
+- `langchain` et `langchain_community` : Gestion avancée des modèles et prompts.
+- `PyYAML` : Manipulation des fichiers YAML.
+- `SQLAlchemy` : Gestion des bases de données pour LangChain.
+- `anyio` : Entrées/sorties asynchrones.
+- `requests` : Gestion des requêtes HTTP.
+
+---
+
+## Contributeurs
+- **Louis Cagi Nicolau** (Auteur Principal)
+- Pour toute question ou suggestion, veuillez créer une « issue » sur ce dépôt.
+
+---
+
+## Licence
+Ce projet est sous licence MIT. Consultez le fichier `LICENSE` pour plus d’informations.
+
+---
+
+## Améliorations Futures
+- Intégration de nouveaux modèles pour améliorer la précision des analyses.
+- Support multi-langue pour le chatbot.
+- Optimisation des performances pour le traitement de fichiers volumineux.
+
+
