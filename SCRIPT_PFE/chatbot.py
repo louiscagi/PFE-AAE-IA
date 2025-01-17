@@ -2,9 +2,10 @@ import openai
 import streamlit as st
 from langchain.chat_models import ChatOpenAI
 from langchain.prompts.chat import ChatPromptTemplate
+import yaml
 
 # Initialisation de l'API OpenAI
-api_key = st.secrets["OPENAI_API_KEY"]  # Bonne pratique : utiliser Streamlit Secrets
+api_key = st.secrets["OPENAI_API_KEY"]
 openai.api_key = api_key
 
 def initialize_chat():
@@ -12,55 +13,73 @@ def initialize_chat():
     if "messages" not in st.session_state:
         st.session_state.messages = []
 
-def process_chat(user_input):
+def query_to_yaml(description):
     """
-    Envoie le message utilisateur à ChatGPT 3.5 Turbo et retourne la réponse.
-    """
-    st.session_state.messages.append({"role": "user", "content": user_input})
-
-    try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=st.session_state.messages,
-        )
-        # Ajouter la réponse au contexte
-        st.session_state.messages.append(
-            {"role": "assistant", "content": response.choices[0].message["content"]}
-        )
-    except Exception as e:
-        st.error(f"Erreur lors de la communication avec ChatGPT : {e}")
-
-def display_chat_history():
-    """Affiche l'historique des messages dans la barre latérale."""
-    st.sidebar.header("Historique des conversations")
-    for message in st.session_state.messages:
-        if message["role"] == "user":
-            st.sidebar.markdown(f"**Vous** : {message['content']}")
-        else:
-            st.sidebar.markdown(f"**ChatGPT** : {message['content']}")
-
-def query_to_yaml(descriptions):
-    """
-    Génère un fichier YAML basé sur une description en langage naturel.
-    Utilise LangChain pour structurer les messages avec OpenAI.
+    Génére un fichier YAML basé sur une description en langage naturel.
     """
     # Création du modèle OpenAI avec LangChain
     model = ChatOpenAI(
         model_name="gpt-3.5-turbo",
-        temperature=0.9,
-        max_tokens=2000
+        temperature=0.7,
+        max_tokens=3000
     )
 
-    # Création des messages du chat
+    # Création du prompt structuré
     chat_prompt = ChatPromptTemplate.from_messages([
-        ("system", "Vous êtes une intelligence artificielle spécialisée dans la génération de fichiers YAML pour l'infrastructure. d'apres le prompt"+
-         " donné tu dois faire le fichier playbook.yaml"),
-        ("human", "Créez un ou plusieurs codes YAML au style Terraform pour configurer un réseau d'infrastructure incluant:\n{descriptions}")
+        ("system", """
+        Vous êtes un assistant spécialisé dans la génération de playbooks Ansible adaptés à des besoins variés en déploiement de ressources informatiques.
+        Votre objectif est de générer des playbooks Ansible bien structurés et respectant les bonnes pratiques.
+
+        ### Standards à respecter
+        - Utilisez des variables globales définies dans une section `vars`.
+        - Assurez-vous que le playbook soit modulaire et facilement compréhensible.
+        - Privilégiez les modules Ansible natifs lorsque cela est possible, mais utilisez des commandes `shell` ou `command` uniquement si nécessaire.
+        - Incluez des `handlers` pour redémarrer les services ou appliquer des changements conditionnels.
+        - Fournissez une description claire pour chaque tâche avec un champ `name`.
+        - Générez des playbooks pouvant être exécutés directement avec Ansible.
+
+        ### Structure minimale attendue
+        - Le playbook doit contenir des sections claires :
+          - `vars`: Variables globales pour les adresses IP, VLANs, mots de passe, etc.
+          - `tasks`: Tâches organisées par objectif (ex. configuration réseau, déploiement de logiciels).
+          - `handlers`: Actions déclenchées conditionnellement.
+
+        ### Rappel
+        - Le contenu doit être adapté à la demande utilisateur.
+        - Soyez précis dans les configurations et veillez à inclure toutes les étapes nécessaires pour une exécution réussie.
+        """),
+        ("human", f"Générez un playbook YAML basé sur cette demande : {description}")
     ])
 
-    # Génération du prompt à partir des messages avec la description comme paramètre
-    prompt_messages = chat_prompt.format_prompt(descriptions=descriptions).to_messages()
+    # Conversion des messages en un texte brut pour le modèle
+    prompt_text = chat_prompt.format_prompt(descriptions=description).to_string()
 
     # Appel de l'API OpenAI via le modèle
-    ai_response = model.invoke(prompt_messages)
-    return ai_response.content
+    ai_response = model.predict(prompt_text)
+
+    # Nettoyage des balises Markdown
+    cleaned_yaml = ai_response.strip().strip("```yaml").strip("```")
+
+    return cleaned_yaml
+
+def validate_yaml(yaml_content):
+    """
+    Valide que le contenu généré est bien en YAML.
+    """
+    try:
+        yaml.safe_load(yaml_content)
+        return True
+    except yaml.YAMLError as e:
+        st.error(f"Erreur dans le YAML généré : {e}")
+        return False
+
+def download_button(yaml_content, filename="playbook.yaml"):
+    """
+    Crée un bouton de téléchargement pour le fichier YAML.
+    """
+    st.download_button(
+        label="Télécharger le fichier YAML",
+        data=yaml_content,
+        file_name=filename,
+        mime="text/yaml"
+    )
