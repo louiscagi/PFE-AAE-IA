@@ -5,32 +5,35 @@ from chatbot import initialize_chat, query_to_yaml, validate_yaml, download_butt
 initialize_chat()
 
 # Titre de l'application
-st.title("Générateur de Playbook Ansible en YAML")
-st.subheader("Entrez une description et générez un fichier YAML adapté")
+st.title("Générateur de Playbook Ansible")
+st.subheader("Entrez une description pour générer un playbook YAML adapté")
 
 # Zone de saisie pour la description
 description = st.text_area(
     "Description",
-    placeholder="Exemple : Configurer un serveur avec SSH, activer le pare-feu, etc."
+    placeholder="Exemple : Configurer un serveur avec SSH, activer le pare-feu, configurer un VLAN, etc."
 )
 
 # Bouton pour générer le YAML
 if st.button("Générer"):
-    if description:
+    if not description.strip():
+        st.error("Veuillez fournir une description valide avant de générer le playbook.")
+    else:
         # Appeler la fonction pour générer le YAML
         yaml_content = query_to_yaml(description)
 
-        # Valider et afficher le YAML
-        if validate_yaml(yaml_content):
-            st.success("Playbook YAML généré avec succès !")
-            st.code(yaml_content, language="yaml")
+        if yaml_content:
+            # Valider et afficher le YAML
+            if validate_yaml(yaml_content):
+                st.success("Playbook YAML généré avec succès !")
+                st.code(yaml_content, language="yaml")
 
-            # Ajouter le bouton de téléchargement
-            download_button(yaml_content, "playbook.yaml")
+                # Ajouter un bouton de téléchargement
+                download_button(yaml_content, "playbook.yaml")
+            else:
+                st.error("Le YAML généré contient des erreurs.")
         else:
-            st.error("Le YAML généré contient des erreurs.")
-    else:
-        st.warning("Veuillez entrer une description avant de générer.")
+            st.error("Aucun contenu YAML n'a été généré. Veuillez réessayer.")
 
 # Section pour réinitialiser l'historique
 st.header("Réinitialisation")

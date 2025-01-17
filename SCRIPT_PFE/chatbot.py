@@ -1,6 +1,6 @@
 import openai
 import streamlit as st
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts.chat import ChatPromptTemplate
 import yaml
 
@@ -24,43 +24,43 @@ def query_to_yaml(description):
         max_tokens=3000
     )
 
-    # Création du prompt structuré
+    # Prompt structuré pour guider l'API
     chat_prompt = ChatPromptTemplate.from_messages([
         ("system", """
-        Vous êtes un assistant spécialisé dans la génération de playbooks Ansible adaptés à des besoins variés en déploiement de ressources informatiques.
-        Votre objectif est de générer des playbooks Ansible bien structurés et respectant les bonnes pratiques.
+        Vous êtes un assistant spécialisé dans la génération de playbooks Ansible conformes aux normes ISO/IEC 27001 et 27002.
+        Vous devez générer uniquement un playbook YAML complet et bien structuré, sans explications ni commentaires supplémentaires.
+        
+        ### Normes à respecter :
+        - Confidentialité : Utilisez des connexions sécurisées (SSH, TLS).
+        - Contrôle d'accès : Limitez les accès administratifs avec des identifiants sécurisés ou des clés SSH.
+        - Journalisation : Ajoutez des étapes pour enregistrer les modifications sur les équipements.
+        - Sécurité réseau : Configurez des règles de pare-feu pour filtrer le trafic non autorisé.
 
-        ### Standards à respecter
-        - Utilisez des variables globales définies dans une section `vars`.
-        - Assurez-vous que le playbook soit modulaire et facilement compréhensible.
-        - Privilégiez les modules Ansible natifs lorsque cela est possible, mais utilisez des commandes `shell` ou `command` uniquement si nécessaire.
-        - Incluez des `handlers` pour redémarrer les services ou appliquer des changements conditionnels.
-        - Fournissez une description claire pour chaque tâche avec un champ `name`.
-        - Générez des playbooks pouvant être exécutés directement avec Ansible.
-
-        ### Structure minimale attendue
-        - Le playbook doit contenir des sections claires :
-          - `vars`: Variables globales pour les adresses IP, VLANs, mots de passe, etc.
-          - `tasks`: Tâches organisées par objectif (ex. configuration réseau, déploiement de logiciels).
-          - `handlers`: Actions déclenchées conditionnellement.
-
-        ### Rappel
-        - Le contenu doit être adapté à la demande utilisateur.
-        - Soyez précis dans les configurations et veillez à inclure toutes les étapes nécessaires pour une exécution réussie.
+        ### Structure attendue :
+        - Une section `vars` définissant les variables globales.
+        - Une section `tasks` listant les étapes à exécuter.
+        - Une section `handlers` pour les actions conditionnelles.
         """),
-        ("human", f"Générez un playbook YAML basé sur cette demande : {description}")
+        ("human", f"Voici les besoins spécifiques de l'utilisateur : {description}. Générez un playbook YAML complet basé sur cette demande.")
     ])
 
-    # Conversion des messages en un texte brut pour le modèle
-    prompt_text = chat_prompt.format_prompt(descriptions=description).to_string()
+    # Conversion du prompt en texte
+    prompt_text = chat_prompt.format_prompt(description=description).to_string()
 
     # Appel de l'API OpenAI via le modèle
-    ai_response = model.predict(prompt_text)
+    try:
+        ai_response = model.invoke(prompt_text)  # Utilisation de invoke au lieu de predict
+    except Exception as e:
+        st.error(f"Erreur lors de l'appel à l'API OpenAI : {e}")
+        return None
 
-    # Nettoyage des balises Markdown
-    cleaned_yaml = ai_response.strip().strip("```yaml").strip("```")
-
-    return cleaned_yaml
+    # Récupérer le contenu texte de la réponse
+    if ai_response.content:
+        cleaned_yaml = ai_response.content.strip().strip("```yaml").strip("```")
+        return cleaned_yaml
+    else:
+        st.error("La réponse de l'API OpenAI est vide.")
+        return None
 
 def validate_yaml(yaml_content):
     """
