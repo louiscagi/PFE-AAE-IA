@@ -25,7 +25,7 @@ def query_with_yaml_and_description(description):
 
     # Création du modèle OpenAI avec LangChain
     model = ChatOpenAI(
-        model_name="gpt-3.5-turbo",
+        model_name="gpt-4",
         temperature=0.7,
         max_tokens=4000
     )
@@ -100,9 +100,9 @@ def explain_playbook(yaml_content):
     Envoie le contenu du playbook YAML à l'API OpenAI pour obtenir une explication détaillée.
     """
     model = ChatOpenAI(
-        model_name="gpt-3.5-turbo",
+        model_name="gpt-4",
         temperature=0.7,
-        max_tokens=3000
+        max_tokens=4000
     )
 
     chat_prompt = ChatPromptTemplate.from_messages([
