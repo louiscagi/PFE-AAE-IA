@@ -5,7 +5,7 @@ langchain==0.0.319      # Pour la gestion avancée des prompts et modèles
 langchain_community==0.3.8  # Extensions pour LangChain
 
 # Gestion YAML et dépendances
-PyYAML==5.4.1           # Version compatible avec LangChain
+PyYAML>=6.0.0           # Gestion YAML (corrige les problèmes de compilation)
 SQLAlchemy==1.4.46      # Compatibilité avec LangChain
 requests==2.31.0        # Requêtes HTTP (dépendance pour OpenAI)
 
@@ -20,3 +20,6 @@ realtime==2.2.0         # Support des fonctionnalités temps réel
 anyio==3.6.2            # Gestion des E/S asynchrones
 pandas==2.0.3           # Nécessaire pour certaines fonctions de manipulation de données
 PyJWT==2.8.0            # Bibliothèque JWT utilisée par certaines API
+setuptools>=65.0.0
+wheel>=0.40.0
+Cython>=0.29.36
