@@ -3,6 +3,7 @@ import streamlit as st
 from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts.chat import ChatPromptTemplate
 import yaml
+from supabase_config import supabase
 
 # Initialisation de l'API OpenAI
 api_key = st.secrets["OPENAI_API_KEY"]
@@ -16,6 +17,15 @@ def initialize_chat():
 def add_message(role, content):
     """Ajoute un message à l'historique."""
     st.session_state.messages.append({"role": role, "content": content})
+    
+def authenticate_user(email, password):
+    """Authentifie l'utilisateur via Supabase."""
+    try:
+        response = supabase.auth.sign_in_with_password({"email": email, "password": password})
+        return response
+    except Exception as e:
+        st.error("Erreur d'authentification : vérifiez vos identifiants.")
+        return None
 
 def query_with_yaml_and_description(description):
     """

@@ -6,3 +6,8 @@ PyYAML==6.0.2          # Lecture/écriture des fichiers YAML
 SQLAlchemy==2.0.35     # Base de données (nécessaire pour certaines parties de LangChain)
 anyio==3.7.1           # Gestion des E/S asynchrones
 requests==2.31.0       # Requêtes HTTP (dépendance pour OpenAI)
+supabase==2.12.0       # SDK Supabase pour Python
+realtime==2.2.0        # Support des fonctionnalités en temps réel
+postgrest==0.19.3      # Communication avec PostgREST
+gotrue==2.11.2         # Gestion de l'authentification
+storage3==0.11.1       # Gestion du stockage Supabase
