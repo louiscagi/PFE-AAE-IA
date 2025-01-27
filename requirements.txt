@@ -1,13 +1,22 @@
-streamlit==1.26.0      # Interface utilisateur
-openai==0.28.0         # Interaction avec l'API OpenAI
-langchain==0.0.319     # LangChain (compatibilité testée)
+# Bibliothèques principales
+streamlit==1.25.0        # Interface utilisateur compatible avec vos dépendances
+openai==0.27.8          # Interaction avec l'API OpenAI
+langchain==0.0.319      # Pour la gestion avancée des prompts et modèles
 langchain_community==0.3.8  # Extensions pour LangChain
-PyYAML==6.0.1          # Gestion des fichiers YAML (compatible avec LangChain)
-SQLAlchemy==1.4.46     # Version compatible avec LangChain
-anyio==3.7.1           # Gestion asynchrone
-requests==2.31.0       # HTTP, dépendance de LangChain/OpenAI
-supabase==1.0.0        # Version stable, moins sujette à des conflits
-realtime==2.2.0        # Temps réel pour Supabase
-postgrest==0.11.3      # Communication avec PostgREST
-gotrue==1.2.0          # Gestion de l'authentification Supabase
-storage3==0.7.0        # Gestion du stockage Supabase
+
+# Gestion YAML et dépendances
+PyYAML==5.4.1           # Version compatible avec LangChain
+SQLAlchemy==1.4.46      # Compatibilité avec LangChain
+requests==2.31.0        # Requêtes HTTP (dépendance pour OpenAI)
+
+# Supabase et ses dépendances
+supabase==1.0.0         # Version stable de Supabase SDK
+gotrue==1.2.0           # Gestion de l'authentification Supabase
+postgrest==0.11.3       # Communication avec PostgREST
+storage3==0.7.0         # Gestion du stockage Supabase
+realtime==2.2.0         # Support des fonctionnalités temps réel
+
+# Autres dépendances
+anyio==3.6.2            # Gestion des E/S asynchrones
+pandas==2.0.3           # Nécessaire pour certaines fonctions de manipulation de données
+PyJWT==2.8.0            # Bibliothèque JWT utilisée par certaines API
