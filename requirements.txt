@@ -1,27 +1,28 @@
-# Bibliothèques principales
-streamlit==1.25.0        # Interface utilisateur compatible avec vos dépendances
-openai==0.27.8          # Interaction avec l'API OpenAI
-langchain==0.0.319      # Pour la gestion avancée des prompts et modèles
-langchain_community==0.3.8  # Extensions pour LangChain
+# Streamlit pour l'interface utilisateur
+streamlit==1.25.0
 
-# Gestion YAML et dépendances
-PyYAML>=6.0.0           # Gestion YAML (corrige les problèmes de compilation)
-SQLAlchemy==1.4.46      # Compatibilité avec LangChain
-requests==2.31.0        # Requêtes HTTP (dépendance pour OpenAI)
+# OpenAI pour l'API GPT
+openai==0.27.8
 
-# Supabase et ses dépendances
-supabase==2.0.0  # Version compatible avec Python 3.12
-gotrue>=2.0.0
-postgrest>=0.19.0
-storage3>=0.10.0        # Gestion du stockage Supabase
-realtime==2.2.0         # Support des fonctionnalités temps réel
+# LangChain pour la gestion avancée des prompts et modèles
+langchain==0.0.319
+langchain_community==0.3.8
 
-# Autres dépendances
-anyio==3.6.2            # Gestion des E/S asynchrones
-pandas==2.0.3           # Nécessaire pour certaines fonctions de manipulation de données
-PyJWT==2.8.0            # Bibliothèque JWT utilisée par certaines API
+# Gestion des fichiers YAML
+PyYAML>=6.0.0,<7.0.0
+
+# SQLAlchemy pour la base de données
+SQLAlchemy>=1.4.46,<2.0.0
+
+# Supabase SDK pour l'intégration de la base de données
+supabase>=2.0.0,<2.1.0
+gotrue>=2.0.0,<3.0.0
+postgrest>=0.19.0,<0.20.0
+storage3>=0.10.0,<0.12.0
+
+# Utilitaires divers
+requests>=2.31.0,<3.0.0
+python-dotenv>=1.0.0,<2.0.0
 setuptools>=65.0.0
 wheel>=0.40.0
 Cython>=0.29.36
-
-python-dotenv>=1.0.0
