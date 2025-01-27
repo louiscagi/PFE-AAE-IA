@@ -4,9 +4,13 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts.chat import ChatPromptTemplate
 import yaml
 from supabase_config import supabase
+from dotenv import load_dotenv  
+import os
 
 # Initialisation de l'API OpenAI
-api_key = st.secrets["OPENAI_API_KEY"]
+api_key = os.getenv("OPENAI_API_KEY")
+supabase_url = os.getenv("SUPABASE_URL")
+supabase_key = os.getenv("SUPABASE_KEY")
 openai.api_key = api_key
 
 def initialize_chat():
