@@ -8,6 +8,7 @@ from chatbot import (
     explain_playbook,
     authenticate_user
 )
+from mistral_bot import query_mistral, explain_playbook_mistral
 
 # Initialiser l'historique des messages
 initialize_chat()
@@ -28,28 +29,34 @@ def login_page():
 if "user" not in st.session_state:
     login_page()
 else:
-    # Titre de l'application
-    st.title("Chatbot Ansible - YAML et Explications")
+    # Interface
+    st.title("Chatbot Ansible - OpenAI & Mistral")
 
-    # Onglets pour basculer entre génération et analyse
+    # Sélection du modèle
+    model_choice = st.radio("Choisissez le modèle :", ["OpenAI (GPT-4)", "Mistral"])
+
+    # Onglets
     tab1, tab2 = st.tabs(["Générer un Playbook", "Analyser un Playbook"])
 
     with tab1:
         st.markdown("### Posez votre question ou décrivez votre besoin")
         user_input = st.text_area("Votre demande", placeholder="Décrivez vos besoins ici.")
 
-        if st.button("Générer Playbook", key="generate_button"):
+        if st.button("Générer Playbook"):
             if not user_input.strip():
-                st.error("Veuillez entrer une description avant de générer.")
+                st.error("Veuillez entrer une description.")
             else:
-                yaml_content, response = query_with_yaml_and_description(user_input)
+                if model_choice == "OpenAI (GPT-4)":
+                    yaml_content, response = query_with_yaml_and_description(user_input)
+                else:
+                    yaml_content, response = query_mistral(user_input)
 
                 if response:
                     st.markdown(f"**Assistant :** {response}")
                     if yaml_content and validate_yaml(yaml_content):
                         download_button(yaml_content, "playbook.yaml", key="download_button")
                 else:
-                    st.error("Une erreur est survenue lors de la génération du playbook.")
+                    st.error("Une erreur est survenue.")
 
     with tab2:
         st.markdown("### Déposez un fichier playbook.yaml à analyser")
@@ -58,10 +65,13 @@ else:
         if uploaded_file is not None:
             try:
                 yaml_content = uploaded_file.read().decode("utf-8")
-                st.markdown("#### Contenu du Playbook")
                 st.code(yaml_content, language="yaml")
 
-                explanation = explain_playbook(yaml_content)
+                if model_choice == "OpenAI (GPT-4)":
+                    explanation = explain_playbook(yaml_content)
+                else:
+                    explanation = explain_playbook_mistral(yaml_content)
+
                 if explanation:
                     st.markdown("#### Explication du Playbook")
                     st.write(explanation)
