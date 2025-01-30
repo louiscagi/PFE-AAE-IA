@@ -1,0 +1,11 @@
+streamlit
+openai
+langchain
+langchain_community
+supabase
+httpx
+langchain-mistralai
+python-dotenv
+SQLAlchemy
+PyYAML
+requests
