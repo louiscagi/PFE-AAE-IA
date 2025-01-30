@@ -26,3 +26,4 @@ python-dotenv<2.0.0,>=1.0.0
 setuptools>=65.0.0
 wheel>=0.40.0
 Cython>=0.29.36
+langchain_mistralai
