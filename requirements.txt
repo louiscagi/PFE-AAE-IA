@@ -28,5 +28,5 @@ wheel>=0.40.0
 Cython>=0.29.36
 
 # Dépendances spécifiques pour LangChain Mistral
-httpx==0.24.1  # Fixer la version de httpx pour éviter les conflits
-langchain_mistralai==0.2.3  # Version compatible avec langchain 0.3.8
+httpx==0.24.0  # Version compatible avec Supabase
+langchain_mistralai==0.1.13  # Version compatible avec langchain 0.3.8
